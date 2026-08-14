@@ -1,5 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'add_expense_page.dart';
+import 'expense_detail_page.dart';
 
 import '../model/expense_model.dart';
 import '../services/expenses.service.dart';
@@ -48,6 +50,26 @@ class _HomePageState extends State<HomePage> {
     return widget.service.calculateTotal(expenses);
   }
 
+  Future<void> _openDetail(Expense expense) async {
+    final result = await Navigator.of(context).push<ExpenseDetailResult>(
+      MaterialPageRoute(
+        builder: (_) => ExpenseDetailPage(
+          expense: expense,
+          service: widget.service,
+        ),
+      ),
+    );
+
+    if (result is ExpenseDeleted) {
+      setState(() => expenses.removeWhere((e) => e.id == result.id));
+    } else if (result is ExpenseUpdated) {
+      setState(() {
+        final index = expenses.indexWhere((e) => e.id == result.expense.id);
+        if (index != -1) expenses[index] = result.expense;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,8 +81,16 @@ class _HomePageState extends State<HomePage> {
       body: _buildBody(),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // I'll be back
+        onPressed: () async {
+          final created = await Navigator.of(context).push<Expense>(
+            MaterialPageRoute(
+              builder: (_) => AddExpensePage(service: widget.service),
+            ),
+          );
+
+          if (created != null) {
+            setState(() => expenses.insert(0, created));
+          }
         },
         child: const Icon(Icons.add),
       ),
@@ -172,6 +202,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildExpenseTile(Expense expense) {
     return ListTile(
+      onTap: () => _openDetail(expense),
       leading: const CircleAvatar(
         child: Icon(Icons.money),
       ),

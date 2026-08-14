@@ -29,7 +29,7 @@ class ExpenseRepository {
 
   Future<Expense> createExpense(Expense expense) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/expenses'),
+      Uri.parse('$baseUrl/api/expenses'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -45,12 +45,26 @@ class ExpenseRepository {
     );
   }
 
-  Future<void> deleteExpense(String id) async {
-    final response = await http.delete(
-      Uri.parse('$baseUrl/expenses/$id'),
+  Future<Expense> updateExpense(String id, Expense expense) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/api/expenses/$id'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(expense.toJson()),
     );
 
-    if (response.statusCode != 204) {
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update expense');
+    }
+
+    return Expense.fromJson(jsonDecode(response.body));
+  }
+
+  Future<void> deleteExpense(String id) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/api/expenses/$id'),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception('Failed to delete expense');
     }
   }

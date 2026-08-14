@@ -22,6 +22,18 @@ class ExpenseService {
     return repository.createExpense(expense);
   }
 
+  Future<Expense> updateExpense(String id, Expense expense) {
+    if (expense.amount <= 0) {
+      throw Exception('Amount must be greater than zero');
+    }
+
+    if (expense.title.trim().isEmpty) {
+      throw Exception('Title cannot be empty');
+    }
+
+    return repository.updateExpense(id, expense);
+  }
+
   Future<void> deleteExpense(String id) {
     return repository.deleteExpense(id);
   }

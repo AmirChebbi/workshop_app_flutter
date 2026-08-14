@@ -5,7 +5,7 @@ import 'package:workshop_app/services/expenses.service.dart';
 
 void main() {
   final repository = ExpenseRepository(
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'https://workshop-app-backend.vercel.app',
   );
 
   final service = ExpenseService(
