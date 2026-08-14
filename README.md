@@ -2,7 +2,7 @@
 
 This project was developed as the submidssion project for an **Orange Digital Center Flutter Workshop**.
 
-The goal was to put the concepts covered during the workshop into practice by building a small expense-tracking application with a Flutter frontend and a REST API Node backend.
+The goal was to put the concepts covered during the workshop into practice by building a small expense-tracking application with a Flutter frontend and a REST API Node backend, [Link over here →](https://github.com/AmirChebbi/workshop_app_backend).
 
 The application demonstrates several Flutter fundamentals, including:
 
